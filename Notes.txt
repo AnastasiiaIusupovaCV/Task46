@@ -1,0 +1,103 @@
+
+В этот раз класс, реализующий интерфейс Runnable выглядит следующим образом
+
+
+public class T5 implements Runnable{
+    
+    protected String name;
+    T5(String name)
+    {
+        this.name = name;
+    }
+    
+    public int threadNum = 1;
+    public void run(){
+        
+        for(threadNum = 1; threadNum<100; )
+        {
+            threadNum = print10(10,threadNum,name);
+            System.out.println("");
+        }
+        
+        System.out.println(name + " exited");
+
+    }
+    
+    public static synchronized int print10(int count, int val, String name){
+        System.out.print(name + ": {");
+        for(int i = 1; i <= count; ++i){
+            System.out.print(val + " ");
+            val++;
+        }
+        System.out.print("} ");
+        return val;
+    }
+}
+
+
+Метод print10 реализован с synchronized и является общим для всех классов.
+
+5 threads created
+Thread0: {1 2 3 4 5 6 7 8 9 10 } 
+Thread4: {1 2 3 4 5 6 7 8 9 10 } 
+Thread3: {1 2 3 4 5 6 7 8 9 10 } 
+Thread2: {1 2 3 4 5 6 7 8 9 10 } 
+Thread1: {1 2 3 4 5 6 7 8 9 10 } 
+Thread2: {11 12 13 14 15 16 17 18 19 20 } 
+Thread3: {11 12 13 14 15 16 17 18 19 20 } 
+Thread4: {11 12 13 14 15 16 17 18 19 20 } 
+Thread0: {11 12 13 14 15 16 17 18 19 20 } 
+Thread4: {21 22 23 24 25 26 27 28 29 30 } 
+Thread3: {21 22 23 24 25 26 27 28 29 30 } 
+Thread2: {21 22 23 24 25 26 27 28 29 30 } 
+Thread1: {11 12 13 14 15 16 17 18 19 20 } 
+Thread2: {31 32 33 34 35 36 37 38 39 40 } 
+Thread3: {31 32 33 34 35 36 37 38 39 40 } 
+Thread4: {31 32 33 34 35 36 37 38 39 40 } 
+Thread0: {21 22 23 24 25 26 27 28 29 30 } 
+Thread4: {41 42 43 44 45 46 47 48 49 50 } 
+Thread3: {41 42 43 44 45 46 47 48 49 50 } 
+Thread2: {41 42 43 44 45 46 47 48 49 50 } 
+Thread1: {21 22 23 24 25 26 27 28 29 30 } 
+Thread2: {51 52 53 54 55 56 57 58 59 60 } 
+Thread3: {51 52 53 54 55 56 57 58 59 60 } 
+Thread4: {51 52 53 54 55 56 57 58 59 60 } 
+Thread0: {31 32 33 34 35 36 37 38 39 40 } 
+Thread4: {61 62 63 64 65 66 67 68 69 70 } 
+Thread3: {61 62 63 64 65 66 67 68 69 70 } 
+Thread2: {61 62 63 64 65 66 67 68 69 70 } 
+Thread1: {31 32 33 34 35 36 37 38 39 40 } 
+Thread2: {71 72 73 74 75 76 77 78 79 80 } 
+Thread3: {71 72 73 74 75 76 77 78 79 80 } 
+Thread4: {71 72 73 74 75 76 77 78 79 80 } 
+Thread0: {41 42 43 44 45 46 47 48 49 50 } 
+Thread4: {81 82 83 84 85 86 87 88 89 90 } 
+Thread3: {81 82 83 84 85 86 87 88 89 90 } 
+Thread2: {81 82 83 84 85 86 87 88 89 90 } 
+Thread1: {41 42 43 44 45 46 47 48 49 50 } 
+Thread2: {91 92 93 94 95 96 97 98 99 100 } 
+Thread3: {91 92 93 94 95 96 97 98 99 Thread2 exited
+100 } 
+Thread3 exited
+Thread4: {91 92 93 94 95 96 97 98 99 100 } 
+Thread0: {51 52 53 54 55 Thread4 exited
+56 57 58 59 60 } 
+Thread0: {61 62 63 64 65 66 67 68 69 70 } 
+Thread1: {51 52 53 54 55 56 57 58 59 60 } 
+Thread1: {61 62 63 64 65 66 67 68 69 70 } 
+Thread0: {71 72 73 74 75 76 77 78 79 80 } 
+Thread1: {71 72 73 74 75 76 77 78 79 80 } 
+Thread0: {81 82 83 84 85 86 87 88 89 90 } 
+Thread1: {81 82 83 84 85 86 87 88 89 90 } 
+Thread0: {91 92 93 94 95 96 97 98 99 100 } 
+Thread0 exited
+Thread1: {91 92 93 94 95 96 97 98 99 100 } 
+Thread1 exited
+
+Заметим, что хоть print10 реализован с synchronized, возможен такой вывод
+    Thread3: {91 92 93 94 95 96 97 98 99 Thread2 exited
+    100 } 
+
+Это объясняется тем, что функции run между потоками не являются синхонизованными,
+а метод System.out.print выводит информации не скопом, а по элементно, нарушая 
+атомарность вывода.
